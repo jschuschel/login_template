@@ -1,21 +1,11 @@
 __author__ = 'jschuschel'
-from flask import Flask, render_template, request, flash
+from . import app
+from flask import render_template, request, flash
 from flask.ext.mail import Message, Mail
-from forms import ContactForm
-
-#app settings
-app = Flask(__name__)
-app.secret_key = "Dis be my key right hur"
+from .forms import ContactForm
+from .models import db
 
 mail = Mail()
-
-app.config["MAIL_SERVER"] = "smtp.gmail.com"
-app.config["MAIL_PORT"] = 465
-app.config["MAIL_USE_SSL"] = True
-app.config["MAIL_USERNAME"] = 'contact@example.com'
-app.config["MAIL_PASSWORD"] = 'your-password'
-
-mail.init_app(app)
 
 #app views
 @app.route('/')
@@ -46,7 +36,9 @@ def contact():
     elif request.method == 'GET':
         return render_template('contact.html', form=form)
 
-
-
-if __name__ == '__main__':
-    app.run(debug=True)
+@app.route('/testdb')
+def testdb():
+  if db.session.query("1").from_statement("SELECT 1").all():
+    return 'It works.'
+  else:
+    return 'Something is broken.'

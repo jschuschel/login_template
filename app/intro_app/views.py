@@ -2,11 +2,9 @@ __author__ = 'jschuschel'
 from . import app
 from flask import render_template, request, flash, session, url_for, redirect
 from flask.ext.mail import Message, Mail
-from .forms import ContactForm, SignupForm
+from .forms import ContactForm, SignupForm, SigninForm
 from .models import db, User
-from app.intro_app import app
-
-mail = Mail()
+from app.intro_app import app, db
 
 #app views
 @app.route('/')
@@ -76,3 +74,16 @@ def profile():
         return redirect(url_for('signin'))
     else:
         return render_template('profile.html')
+
+@app.route('signin')
+def signing():
+    form = SigninForm()
+
+    if request.method == 'POST':
+        if form.validate() == False:
+            return render_template('signin.html', form=form)
+        else:
+            session['email'] = form.email.data
+            return redirect(url_for('profile'))
+    elif request.method == 'GET':
+        return render_template('signin.html', form = form)

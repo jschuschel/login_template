@@ -1,8 +1,7 @@
 __author__ = 'slipvyne'
 from flask.ext.sqlalchemy import SQLAlchemy
 from werkzeug import generate_password_hash, check_password_hash
-
-db = SQLAlchemy()
+from app.intro_app import db
 
 class User(db.Model):
     uid = db.Column(db.Integer, primary_key = True)
@@ -21,4 +20,4 @@ class User(db.Model):
         self.pwdhash = generate_password_hash(password)
 
     def check_password(self, password):
-        return check_password_hash(self.pwdhash, password)
+        return check_password_hash(self.pwdhash, password).

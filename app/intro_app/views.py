@@ -45,6 +45,9 @@ def testdb():
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     form = SignupForm()
+    if 'email' in session:
+        return redirect(url_for('profile'))
+
     if request.method == 'POST':
         if form.validate() == False:
             return render_template('signup.html', form=form)
@@ -76,9 +79,11 @@ def profile():
         return render_template('profile.html')
 
 @app.route('signin')
-def signing():
+def signin():
     form = SigninForm()
 
+    if 'email' in session:
+        return redirect(url_for('profile'))
     if request.method == 'POST':
         if form.validate() == False:
             return render_template('signin.html', form=form)

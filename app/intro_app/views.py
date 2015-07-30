@@ -2,8 +2,9 @@ __author__ = 'jschuschel'
 from . import app
 from flask import render_template, request, flash
 from flask.ext.mail import Message, Mail
-from .forms import ContactForm
-from .models import db
+from .forms import ContactForm, SignupForm
+from .models import db, User
+from app.intro_app import app
 
 mail = Mail()
 
@@ -42,3 +43,14 @@ def testdb():
     return 'It works.'
   else:
     return 'Something is broken.'
+
+@app.route('/signup', methods=['GET', 'POST'])
+def signup():
+    form = SignupForm()
+    if request.method == 'POST':
+        if form.validate() == False:
+            return render_template('signup.html', form=form)
+        else:
+            return "[1] Create a new user [2] sign in the user [3] redirect to the user's profile"
+    elif request.method == 'GET':
+        return render_template('signup.html', form = form)
